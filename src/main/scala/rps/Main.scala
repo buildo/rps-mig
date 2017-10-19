@@ -1,9 +1,8 @@
 package rps
-import scala.io.StdIn
+import scala.io.StdIn.readLine
 
 object Main extends App {
-  println("Wanna play? (y/n) ")
-  val line = StdIn.readLine()
+  val line = readLine("Wanna play? (y/n): ")
   if (line == "y") {
     while(true) {
       Game.play()
