@@ -1,55 +1,56 @@
 package rps
 import scala.io.StdIn.readLine
 
-sealed abstract class Move {
+sealed trait Move {
   def toString : String
 }
-case object ROCK extends Move {
+case object Rock extends Move {
   override def toString = "Rock"
 }
-case object PAPER extends Move {
+case object Paper extends Move {
   override def toString = "Paper"
 }
-case object SCISSORS extends Move {
+case object Scissors extends Move {
   override def toString = "Scissors"
-}
-case object INVALID extends Move {
-  override def toString = "Invalid Move!"
 }
 
 object Game {
   val randomGen = scala.util.Random
 
-  implicit def intToMove(move: Option[Int]): Move = {
-   move match {
-    case Some(0) => ROCK
-    case Some(1) => PAPER
-    case Some(2) => SCISSORS
-    case _ => INVALID
+  def convertToMove(move: String): Option[Move] = {
+    move match {
+      case "0" => Some(Rock)
+      case "1" => Some(Paper)
+      case "2" => Some(Scissors)
+      case _ => None
+    }
   }
-}
+
+  def getRandomMove() : Move = {
+    Array(Rock, Paper, Scissors).apply(randomGen.nextInt(3))
+  }
 
   def detectGameEndResult(playerMove: Move, computerMove: Move) : String = {
     (playerMove, computerMove) match {
       case (x, y) if x == y => "Draw!"
-      case (ROCK, PAPER) | (PAPER, SCISSORS) | (PAPER, ROCK) => "I Won!"
-      case (ROCK, SCISSORS) | (PAPER, ROCK) | (SCISSORS, PAPER) => "You Won!"
-      case (_, _) => "Invalid Round!!"
+      case (Rock, Paper) | (Paper, Scissors) | (Scissors, Rock) => "I Won!"
+      case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => "You Won!"
+      case _ => "Invalid Round!!"
     }
   }
 
   def play() : Unit = {
-    val myPlay : Move = Some(randomGen.nextInt(3))
+    val userPlay : Option[Move] = convertToMove(readLine("Choose your move between Rock(0), Paper(1) or Scissors(2): "))
 
-    val userPlay : Move = try {
-      Some(readLine("Choose your move between Rock(0), Paper(1) or Scissors(2): ").toInt)
-    }
-    catch {
-      case ex: NumberFormatException => None
-    }
+    userPlay match {
+      case None => println("Invalid Move! Please, try again...")
+      case Some(_) => {
+        val myPlay : Move = getRandomMove()
 
-    println(s"You Played: ${userPlay}")
-    println(s"I played: ${myPlay}")
-    println(s"Result: ${detectGameEndResult(userPlay, myPlay)}")
+        println(s"You Played: ${userPlay.get}")
+        println(s"I played: ${myPlay}")
+        println(s"Result: ${detectGameEndResult(userPlay.get, myPlay)}")
+      }
+    }
   }
 }
