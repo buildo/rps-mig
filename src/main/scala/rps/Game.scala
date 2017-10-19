@@ -44,12 +44,12 @@ object Game {
 
     userPlay match {
       case None => println("Invalid Move! Please, try again...")
-      case Some(_) => {
+      case Some(userMove) => {
         val myPlay : Move = getRandomMove()
 
-        println(s"You Played: ${userPlay.get}")
+        println(s"You Played: ${userMove}")
         println(s"I played: ${myPlay}")
-        println(s"Result: ${detectGameEndResult(userPlay.get, myPlay)}")
+        println(s"Result: ${detectGameEndResult(userMove, myPlay)}")
       }
     }
   }
