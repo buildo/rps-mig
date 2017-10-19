@@ -1,25 +1,10 @@
-package rps;
+package rps
 
-object Move {
-  sealed trait Move {
-    def toString : String
-  }
-  case object Rock extends Move {
-    override def toString = "Rock"
-  }
-  case object Paper extends Move {
-    override def toString = "Paper"
-  }
-  case object Scissors extends Move {
-    override def toString = "Scissors"
-  }
+import io.buildo.enumero.annotations.indexedEnum
 
-  def toMove(ref: String) : Option[Move] = {
-    ref match {
-      case "0" => Some(Rock)
-      case "1" => Some(Paper)
-      case "2" => Some(Scissors)
-      case _ => None
-    }
-  }
-}
+@indexedEnum trait Move {
+  type Index = String
+  object Rock { "0" }
+  object Paper { "1" }
+  object Scissors { "2" }
+} 

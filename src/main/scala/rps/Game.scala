@@ -1,6 +1,7 @@
 package rps
 import scala.io.StdIn.readLine
 import Move._
+import io.buildo.enumero.{CaseEnumIndex, CaseEnumSerialization}
 
 object Game {
   val randomGen = scala.util.Random
@@ -19,15 +20,15 @@ object Game {
   }
 
   def play() : Unit = {
-    val userPlay : Option[Move] = Move.toMove(readLine("Choose your move between Rock(0), Paper(1) or Scissors(2): "))
+    val userPlay : Option[Move] = CaseEnumIndex[Move].caseFromIndex(readLine("Choose your move between Rock(0), Paper(1) or Scissors(2): "))
 
     userPlay match {
       case None => println("Invalid Move! Please, try again...")
       case Some(userMove) => {
         val myPlay : Move = getRandomMove()
 
-        println(s"You Played: ${userMove}")
-        println(s"I played: ${myPlay}")
+        println(s"You Played: ${CaseEnumSerialization[Move].caseToString(userMove)}")
+        println(s"I played: ${CaseEnumSerialization[Move].caseToString(myPlay)}")
         println(s"Result: ${detectGameEndResult(userMove, myPlay)}")
       }
     }
