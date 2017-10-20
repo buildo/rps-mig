@@ -1,33 +1,35 @@
 package rps
 import scala.io.StdIn.readLine
+import Move._
 
 object Game {
   val randomGen = scala.util.Random
 
-  def moveRepr(move: Int): String = {
-    move match {
-      case 0 => "Rock"
-      case 1 => "Paper"
-      case 2 => "Scissors"
-      case _ => "Invalid move!"
-    }
+  def getRandomMove() : Move = {
+    Array(Rock, Paper, Scissors).apply(randomGen.nextInt(3))
   }
 
-  def detectGameEndResult(playerMove: Int, computerMove: Int) : String = {
+  def detectGameEndResult(playerMove: Move, computerMove: Move) : String = {
     (playerMove, computerMove) match {
       case (x, y) if x == y => "Draw!"
-      case (0, 1) | (1, 2) | (2, 0) => "I Won!"
-      case (0, 2) | (1, 0) | (2, 1) => "You Won!"
-      case (_, _) => "Invalid Round!!"
+      case (Rock, Paper) | (Paper, Scissors) | (Scissors, Rock) => "I Won!"
+      case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => "You Won!"
+      case _ => "Invalid Round!!"
     }
   }
 
   def play() : Unit = {
-    val myPlay = randomGen.nextInt(3)
-    val userPlay = readLine("Choose your move between Rock(0), Paper(1) or Scissors(2): ").toInt
+    val userPlay : Option[Move] = Move.toMove(readLine("Choose your move between Rock(0), Paper(1) or Scissors(2): "))
 
-    println(s"You Played: ${moveRepr(userPlay)}")
-    println(s"I played: ${moveRepr(myPlay)}")
-    println(s"Result: ${detectGameEndResult(userPlay, myPlay)}")
+    userPlay match {
+      case None => println("Invalid Move! Please, try again...")
+      case Some(userMove) => {
+        val myPlay : Move = getRandomMove()
+
+        println(s"You Played: ${userMove}")
+        println(s"I played: ${myPlay}")
+        println(s"Result: ${detectGameEndResult(userMove, myPlay)}")
+      }
+    }
   }
 }
