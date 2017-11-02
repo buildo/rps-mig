@@ -20,13 +20,12 @@ object WebServer {
 
     implicit val executionContext = system.dispatcher
     val route =
-      
       pathPrefix("rps") {
         path("play") {
           post {
              entity(as[Request]) { request =>
               val round = Game.play(request.userMove)
-              val response = new Response(round)
+              val response = Response(round)
               complete(HttpEntity(ContentTypes.`application/json`, response.asJson.noSpaces))
             }
           }
